@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dla Werci 💖</title>
+  <link rel="preload" href="./assets/base_puzzle.webp" as="image" type="image/webp" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <div id="startScreen" class="screen screen-start">
+    <div class="start-screen-stack">
+      <div class="start-audio-ribbon" role="group" aria-label="Dźwięk przed rozpoczęciem (to samo co w grze)">
+        <span class="start-audio-kicker">Dźwięk</span>
+        <div class="start-audio-toggles">
+          <label class="start-audio-chip">
+            <input id="sfxToggleStart" type="checkbox" checked />
+            <span>Efekty</span>
+          </label>
+          <label class="start-audio-chip">
+            <input id="musicToggleStart" type="checkbox" checked />
+            <span>Muzyka w tle</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="envelope-scene" id="gift" role="button" tabindex="0" aria-label="Otwórz prezent">
+      <div class="envelope">
+        <div class="envelope-back" aria-hidden="true"></div>
+
+        <div class="envelope-letter">
+          <div class="letter-header">
+            <span class="letter-kicker">Dla Werci</span>
+            <h1>Do Misia Agresorka 💖</h1>
+            <p class="subtitle">Słodziaka i przyszłej pani profesor nauk informatycznych ✨</p>
+          </div>
+
+          <div class="letter-mascot">
+            <img
+              class="gojo-dance"
+              src="./assets/gojo.gif"
+              alt="Gojo tańczy — pozdrowienia od ego topka"
+              loading="lazy"
+            />
+            <p class="ego-caption">od "ego topka" 💖</p>
+          </div>
+
+          <div class="letter-cta">
+            <h2>Otwórz prezent</h2>
+            <p>kliknij, klik, klik, klik ✨</p>
+            <div class="card-gift" aria-hidden="true">
+              <span class="card-gift-glow"></span>
+              <span class="card-gift-lid"></span>
+              <span class="card-gift-box"></span>
+              <span class="card-gift-ribbon-v"></span>
+              <span class="card-gift-ribbon-h"></span>
+              <span class="card-gift-bow"></span>
+              <span class="card-gift-knot"></span>
+              <span class="card-gift-sparkle sparkle-one">✨</span>
+              <span class="card-gift-sparkle sparkle-two">💖</span>
+              <span class="card-gift-sparkle sparkle-three">✨</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="envelope-front" aria-hidden="true"></div>
+        <div class="envelope-flap" aria-hidden="true">
+          <div class="envelope-seal">💖</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <main id="gameScreen" class="hidden">
+    <div id="puzzleBackdrop" class="puzzle-backdrop" aria-hidden="true"></div>
+    <div class="main-container">
+      <div class="top-title">
+        <h2>Puzzle maści wszelakiej 🧩</h2>
+        <p>Happy Birthday Słodziak 💕</p>
+      </div>
+
+      <div class="game-layout">
+        <section class="puzzle-area" aria-label="Interaktywna układanka">
+          <div class="stats app-topbar">
+            <div class="stat"><span>Ruchy</span><strong id="moves">0</strong></div>
+            <div class="stat"><span>Czas</span><strong id="timer">00:00</strong></div>
+            <div class="stat"><span>Ułożone</span><strong id="placedCount">0 / 25</strong></div>
+          </div>
+
+          <div class="difficulty-strip" aria-label="Poziom trudności">
+            <div class="difficulty-panel">
+              <span class="control-title">Poziom trudności</span>
+              <select id="pieceCount" class="sr-only" aria-label="Liczba elementów">
+                <option value="9">9 (3 × 3)</option>
+                <option value="16">16 (4 × 4)</option>
+                <option value="25" selected>25 (5 × 5)</option>
+                <option value="36">36 (6 × 6)</option>
+                <option value="64">64 (8 × 8)</option>
+                <option value="100">100 (10 × 10)</option>
+                <option value="144">144 (12 × 12)</option>
+                <option value="500">500 (25 × 20) — szeroki ekran</option>
+                <option value="1000">1000 (40 × 25) — szeroki ekran</option>
+              </select>
+
+              <div class="difficulty-buttons" role="group" aria-label="Wybierz poziom trudności">
+                <button class="difficulty-button" type="button" data-pieces="9">Easy <span>3×3</span></button>
+                <button class="difficulty-button" type="button" data-pieces="16">Sweet <span>4×4</span></button>
+                <button class="difficulty-button active" type="button" data-pieces="25">Classic <span>5×5</span></button>
+                <button class="difficulty-button" type="button" data-pieces="36">Focus <span>6×6</span></button>
+                <button class="difficulty-button" type="button" data-pieces="64">Doctor <span>8×8</span></button>
+                <button class="difficulty-button" type="button" data-pieces="100">Hard <span>10×10</span></button>
+                <button class="difficulty-button" type="button" data-pieces="144">Insane <span>12×12</span></button>
+                <button class="difficulty-button" type="button" data-pieces="500" title="">Ultra Insane <span>25×20</span></button>
+                <button class="difficulty-button" type="button" data-pieces="1000" title="">Monument <span>40×25</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="board-wrap">
+            <div id="boardSkeleton" class="board-skeleton hidden" aria-hidden="true">
+              <span class="board-skeleton-label">Układanie puzzli…</span>
+            </div>
+            <div id="boardPanLayer" class="board-pan-layer">
+            <div id="puzzleBoard" class="puzzle-board" aria-label="Plansza puzzli">
+              <div id="boardGhost" class="board-ghost-layer" aria-hidden="true"></div>
+            </div>
+
+            <div id="piecesWorkbench" class="pieces-workbench collapsed" aria-label="Strefa robocza do składania fragmentów">
+              <div class="workbench-label">
+                <span>Strefa robocza — odłóż kilka klocków i łącz pasujące fragmenty</span>
+                <button id="toggleWorkbench" type="button" aria-expanded="false">Rozwiń</button>
+              </div>
+              <div
+                id="workbenchResizeHandle"
+                class="workbench-resize-handle"
+                role="separator"
+                hidden
+                aria-hidden="true"
+                aria-orientation="horizontal"
+                aria-label="Zmień wysokość strefy roboczej przeciągając w pionie"
+                title="Przeciągnij w górę lub w dół, aby powiększyć lub zmniejszyć strefę roboczą"
+              ></div>
+            </div>
+
+            <div id="piecesTray" class="pieces-tray" aria-label="Luźne elementy puzzli">
+              <div class="tray-label-row">
+                <div class="tray-label">Luźne elementy — przewijaj, jeśli jest ich dużo</div>
+                <section class="tray-sort-actions" role="group" aria-label="Filtr kształtu na tacki">
+                  <button type="button" class="tray-sort-btn" data-tray-sort="frame-first" title="Pokaż tylko rogi i brzegi — kliknij ponownie, by wyłączyć" aria-pressed="false">Rama</button>
+                  <button type="button" class="tray-sort-btn" data-tray-sort="edges" title="Pokaż tylko proste krawędzie — kliknij ponownie, by wyłączyć" aria-pressed="false">Krawędzie</button>
+                  <button type="button" class="tray-sort-btn" data-tray-sort="center" title="Pokaż tylko środek — kliknij ponownie, by wyłączyć" aria-pressed="false">Środek</button>
+                </section>
+              </div>
+            </div>
+
+            </div>
+
+            <div id="regionStats" class="piece-tool-stats tray-stats-below-tray region-stats-rich" aria-live="polite">
+              Rama 0/0 · Góra 0/0 · Centrum 0/0
+            </div>
+
+            <div id="status" class="status status-below-tray" aria-live="polite"></div>
+            <div
+              id="trayFiltersInlineSlot"
+              class="tray-filters-inline-slot"
+              aria-live="polite"
+            ></div>
+          </div>
+
+          <div class="controls control-center" aria-label="Ustawienia układanki">
+            <label class="file-button" for="imageInput">
+              🖼️ Zmień zdjęcie
+              <input id="imageInput" type="file" accept="image/*" />
+            </label>
+
+            <button id="newPuzzle" type="button">🔄 Od nowa</button>
+            <button id="shufflePuzzle" type="button">🎲 Wymieszaj luźne</button>
+            <button id="openGuide" type="button">❔</button>
+            <button id="printTemplate" type="button">🖨️ Drukuj szablon</button>
+            <button id="export3d" type="button">🧊 Eksport 3D</button>
+          </div>
+
+          <div class="checkpoint-panel" role="group" aria-label="Zapis i wczytanie postępu">
+            <button id="saveCheckpoint" type="button">💾 Zapisz postęp</button>
+            <button id="loadCheckpoint" type="button">📂 Wczytaj zapis</button>
+          </div>
+
+        
+
+        </section>
+
+        <button
+          id="toggleFocusSidePanel"
+          type="button"
+          class="focus-side-panel-toggle"
+          aria-expanded="true"
+          aria-controls="gameSidePanel"
+          hidden
+        >
+          Opcje
+        </button>
+
+        <aside id="gameSidePanel" class="side-panel">
+          <h2>🖼️ Podgląd</h2>
+
+          <img
+            id="previewImage"
+            class="preview"
+            src="./assets/base_puzzle.webp"
+            alt="Podgląd obrazka użytego w puzzlach"
+          />
+          <button id="previewZoom" class="preview-zoom" type="button">Powiększ podgląd</button>
+
+          <div class="audio-panel tray-filters-panel" role="group" aria-label="Filtr taczki luźnych puzzli">
+            <span class="audio-panel-title">Tacka i region</span>
+
+            <div class="piece-tool-group tray-filters-group" role="group" aria-label="Filtruj tackę po typie klocka">
+              <span class="piece-tool-label">Tacka</span>
+              <button class="tray-filter active" type="button" data-filter-kind="type" data-filter-value="all">Wszystkie</button>
+              <button class="tray-filter" type="button" data-filter-kind="type" data-filter-value="corner">Rogi</button>
+              <button class="tray-filter" type="button" data-filter-kind="type" data-filter-value="edge">Krawędzie</button>
+              <button class="tray-filter" type="button" data-filter-kind="type" data-filter-value="center">Środek</button>
+            </div>
+
+            <div class="piece-tool-group tray-filters-group" role="group" aria-label="Filtruj tackę po regionie obrazka">
+              <span class="piece-tool-label">Region</span>
+              <button class="tray-filter active" type="button" data-filter-kind="region" data-filter-value="all">Całość</button>
+              <button class="tray-filter" type="button" data-filter-kind="region" data-filter-value="top">Góra</button>
+              <button class="tray-filter" type="button" data-filter-kind="region" data-filter-value="bottom">Dół</button>
+              <button class="tray-filter" type="button" data-filter-kind="region" data-filter-value="left">Lewo</button>
+              <button class="tray-filter" type="button" data-filter-kind="region" data-filter-value="right">Prawo</button>
+              <button class="tray-filter" type="button" data-filter-kind="region" data-filter-value="middle">Centrum</button>
+            </div>
+          </div>
+
+          <div class="audio-panel rotation-hint-panel" role="note" aria-label="Sposoby obrotu puzzla">
+            <span class="audio-panel-title">Obroty</span>
+            <p class="rotation-hint-text">
+              <span class="desktop-hint">
+                Wybierz klocek, potem <strong>klawisz R</strong> albo <strong>prawy przycisk myszy</strong>.
+              </span>
+              <span class="mobile-hint">
+                Najpierw <strong>krótki tap</strong>, żeby wybrać klocek (obramowanie); potem
+                <strong>drugi tap</strong> na ten sam klocek, żeby obrócić o 90°.
+              </span>
+            </p>
+          </div>
+
+          <div class="audio-panel" role="group" aria-label="Dźwięk i ustawienia gry">
+            <span class="audio-panel-title">Dźwięk i gra</span>
+            <label class="audio-toggle">
+              <input id="sfxToggle" type="checkbox" checked />
+              <span>Efekty w grze</span>
+            </label>
+            <label class="audio-toggle">
+              <input id="musicToggle" type="checkbox" checked />
+              <span>Muzyka w tle</span>
+            </label>
+            <div class="audio-panel-extras" role="group" aria-label="Tryb skupienia i pomoc przy układaniu">
+              <button id="focusBoard" type="button" aria-pressed="false">🔎 Tryb skupienia</button>
+              <label class="assist-mode-label audio-panel-assist" for="assistMode">
+                Pomoc
+                <select id="assistMode">
+                  <option value="warm" selected>Ciepło-zimno</option>
+                  <option value="minimal">Minimalnie</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="message">
+            <strong>Życzenia 💌</strong>
+            <br>
+            <p>
+              Dla przyszłej pani profesor: niech recenzenci będą życzliwi, 
+              eksperymenty powtarzalne, a graf wiedzy w głowie miał dobry asymptotyczny rozrost. 
+              By CZAT GPT
+            </p>
+
+            <p>
+              Niech każdy element Twojego życia układa się jak puzzle. A gdyby układanka stała się za trudna, nie martw się „Nah, we'd win” 
+              🔵 Aka + 🔴 Ao ...🫸💜. By "ego topek"
+            </p>
+            <p> Ὁ μὴ ἐφιέμενος τῶν ἀδυνάτων, οὐδέποτε αὐτῶν τυγχάνει. By Heraklit</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div id="stitchCelebration" class="stitch-celebration hidden" role="dialog" aria-modal="true" aria-labelledby="stitchTitle">
+    <div class="stitch-card">
+      <button id="closeCelebration" class="stitch-close" type="button" aria-label="Zamknij celebrację">×</button>
+      <div class="stitch-card-shine" aria-hidden="true"></div>
+      <div class="stitch-card-inner">
+        <p class="stitch-badge">🧩 Puzzle ukończone</p>
+        <figure class="stitch-media">
+          <img src="./assets/sticz.gif" alt="Sticz świętuje ułożenie puzzli" />
+        </figure>
+        <div class="stitch-copy">
+          <h2 id="stitchTitle">Ślicznie!</h2>
+          <p>Stich jest dumny 💙✨</p>
+        </div>
+        <div class="win-stats" aria-label="Wynik układanki">
+          <div><span>Czas</span><strong id="winTime">00:00</strong></div>
+          <div><span>Ruchy</span><strong id="winMoves">0</strong></div>
+          <div><span>Poziom</span><strong id="winPieces">0</strong></div>
+        </div>
+        <div class="win-actions" role="group" aria-label="Co dalej">
+          <button id="winNewPuzzle" type="button">Zagraj jeszcze raz</button>
+          <button id="winChangeLevel" type="button">Zmień poziom</button>
+          <button id="winViewImage" type="button">Zobacz obrazek</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="guideScreen" class="guide-screen hidden" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <div class="guide-card">
+      <button id="closeGuide" class="stitch-close" type="button" aria-label="Zamknij pomoc">×</button>
+      <div class="guide-hero">
+        <p class="guide-kicker">Instrukcja układania</p>
+        <h2 id="guideTitle">Jak działa ta układanka?</h2>
+        <p>
+          To nadal klasyczne puzzle: przeciągasz klocek, obracasz go i szukasz właściwego miejsca.
+          Dodatkowe narzędzia pomagają ogarnąć większe poziomy bez zdradzania rozwiązania. 
+        </p>
+      </div>
+
+      <div class="guide-grid">
+        <article>
+          <h3>Tacka</h3>
+          <p>
+            To główny magazyn luźnych puzzli. W panelu po prawej możesz ją filtrować po rogach,
+            krawędziach, środku i regionach obrazka, żeby przy setkach klocków nie szukać wszystkiego naraz.
+          </p>
+        </article>
+
+        <article>
+          <h3>Strefa robocza</h3>
+          <p>
+            To mały blat między planszą a tacką. Odkładaj tam kilka podejrzanych klocków,
+            ustawiaj je obok siebie i buduj fragmenty, zanim przeniesiesz je na planszę.
+          </p>
+        </article>
+
+        <article>
+          <h3>Region</h3>
+          <p>
+            Region oznacza przybliżony obszar obrazka: góra, dół, lewo, prawo albo centrum.
+            Filtr regionu nie pokazuje miejsca docelowego, tylko zawęża liczbę widocznych klocków.
+          </p>
+        </article>
+
+        <article>
+          <h3>Tryb skupienia</h3>
+          <p>
+            Zwija głównie panel boczny i rozciąga planszę oraz tackę. Dodatkowy pływający blok (filtry, obroty,
+            dźwięk, wyjście z trybu chowania) ustawisz przyciskami <strong>Schowaj</strong> i <strong>Opcje</strong>.
+            Stan <strong>Schowaj</strong> ukrywa także wybór <strong>poziomu trudności</strong>,
+            rząd <strong>Zmień zdjęcie</strong> / eksport oraz <strong>Zapis / Wczytaj</strong>.
+            Na szerokiej stronie przyciski Schowaj/Opcje siedzą zwykle w prawym górnym rogu gry.
+          </p>
+        </article>
+
+        <article>
+          <h3>Poziom pomocy</h3>
+          <p>
+            „Ciepło-zimno” podświetla trzymany klocek i obrys planszy, gdy jest blisko dobrego pola —
+            żeby było widać, czy warto puszczać przyczep.
+          </p>
+          <ul class="guide-list-help-highlights">
+            <li>
+              <span class="guide-help-yellow">Żółty / złoty:</span>
+              dobry poziom i pozycja, ale zły obrót — na komputerze: <strong>R</strong> albo prawy przycisk myszy
+              (+90° — tak jak po R); na telefonie wybrany już klocek <strong>stuknij drugi raz krótko</strong>, żeby obrócić.
+              Jak trafisz na <span class="guide-help-green">zielono</span>, można puszczać klocek.
+            </li>
+            <li>
+              <span class="guide-help-green">Zielony:</span>
+              wszystko gra: jesteś przy właściwym polu i klocek jest ustawiony tak, że przy puszczeniu
+              przyczepi się automatycznie.
+            </li>
+          </ul>
+          <p>
+            „Minimalnie” zostawia tylko przyczepianie (<em>snap</em>), dźwięki i brak żółto-zielonych podpowiedzi
+            przy szukaniu miejsca.
+          </p>
+        </article>
+
+        <article>
+          <h3>Łączenie fragmentów</h3>
+          <p>
+            Klocki z rotacją 0° mogą połączyć się w tackce lub strefie roboczej, jeśli są sąsiadami
+            i ustawisz je blisko prawdziwego dopasowania krawędzi. Potem przeciągasz je jako grupę.
+          </p>
+        </article>
+      </div>
+
+      <div class="guide-steps">
+        <h3>Szybkie zasady</h3>
+        <ol>
+          <li>Przeciągnij klocek z tacki, strefy roboczej albo planszy.</li>
+          <li>
+            Na komputerze obracasz <strong>R</strong> albo prawym przyciskiem myszy.
+            Na małym ekranie pierwszym krótkim dotknięciem <strong>wybierasz</strong> klocek, drugim na ten sam klocek
+            <strong>obracasz</strong> o <strong>90°</strong>.
+          </li>
+          <li>Luźny klocek możesz zostawić na planszy, a poprawny zatrzaśnie się automatycznie.</li>
+          <li>Przy układance <strong>10×10</strong> i większej: na telefonie przytrzymanie pokazuje większy podgląd klocka; na szerokiej stronie też przy najechaniu myszką.</li>
+          <li>Zapis postępu zapamiętuje planszę, strefę roboczą i połączone fragmenty.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <div id="imagePreviewModal" class="image-preview-modal hidden" role="dialog" aria-modal="true" aria-label="Powiększony podgląd obrazka">
+    <button id="closePreview" class="stitch-close" type="button" aria-label="Zamknij podgląd">×</button>
+    <div class="image-preview-modal-frame">
+      <img id="largePreviewImage" src="./assets/base_puzzle.webp" alt="Powiększony obrazek puzzli" />
+    </div>
+  </div>
+
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+  <div id="pieceZoom" class="piece-zoom hidden" aria-hidden="true"></div>
+
+  <nav id="mobileActions" class="mobile-actions" aria-label="Szybkie akcje na telefonie" hidden>
+    <button type="button" id="mobilePreview" class="mobile-action-btn">🖼 Podgląd</button>
+    <button type="button" id="mobileFocus" class="mobile-action-btn">🔎 Skupienie</button>
+    <button type="button" id="mobileHelp" class="mobile-action-btn">❔ Pomoc</button>
+  </nav>
+
+  <section id="tutorialOverlay" class="tutorial-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+    <article class="tutorial-card">
+      <p class="tutorial-kicker">Pierwsze kroki</p>
+      <h2 id="tutorialTitle" class="tutorial-title">Przeciągnij klocek</h2>
+      <p class="tutorial-body">Z tacki przenieś element na planszę.</p>
+      <p class="tutorial-progress" aria-live="polite">1 / 3</p>
+      <p class="tutorial-actions">
+        <button type="button" id="tutorialSkip" class="tutorial-btn tutorial-btn-ghost">Pomiń</button>
+        <button type="button" id="tutorialNext" class="tutorial-btn">Dalej</button>
+      </p>
+    </article>
+  </section>
+
+  <audio id="bgmAudio" class="bgm-audio-hidden" playsinline preload="metadata" aria-hidden="true"></audio>
+</body>
+</html>
