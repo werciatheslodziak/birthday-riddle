@@ -1,6 +1,11 @@
 import { els, state, setStatus, updateStats, syncMobileActionsBar } from "./state.js";
 import { runOpenGiftSequence, prefetchPuzzleImage, resetPrefetchCache } from "./opening.js";
-import { installBoardPanZoom, resetBoardPan, updateBoardGhostHints } from "./board-view.js";
+import {
+  installBoardPanZoom,
+  resetBoardPan,
+  syncBoardPanForViewport,
+  updateBoardGhostHints,
+} from "./board-view.js";
 import { installTutorial, maybeShowTutorial } from "./tutorial.js";
 import { preparePuzzleImageFile } from "./image-prep.js";
 import { STATUS } from "./messages.js";
@@ -44,9 +49,17 @@ import { clampNumber } from "./utils.js";
 let resizeTimer = 0;
 let workbenchResizeSession = null;
 
+function isMobileGameViewport() {
+  try {
+    return window.matchMedia("(max-width: 900px)").matches;
+  } catch {
+    return false;
+  }
+}
+
 function syncWorkbenchResizeHandle() {
   if (!els.workbenchResizeHandle) return;
-  const hide = state.workbenchCollapsed;
+  const hide = state.workbenchCollapsed || isMobileGameViewport();
   if (hide) {
     els.workbenchResizeHandle.setAttribute("hidden", "");
     els.workbenchResizeHandle.setAttribute("aria-hidden", "true");
@@ -115,6 +128,7 @@ function resetInitialView() {
 
 function openGift() {
   void runOpenGiftSequence().then(() => {
+    syncBoardPanForViewport();
     syncMobileActionsBar();
     maybeShowTutorial();
   });
@@ -306,7 +320,7 @@ function bindEventListeners() {
     syncWorkbenchResizeHandle();
   });
   els.workbenchResizeHandle?.addEventListener("pointerdown", (event) => {
-    if (state.workbenchCollapsed) return;
+    if (state.workbenchCollapsed || isMobileGameViewport()) return;
     event.preventDefault();
     workbenchResizeSession = {
       pointerId: event.pointerId,
@@ -469,6 +483,8 @@ function bindEventListeners() {
   window.addEventListener("resize", () => {
     scheduleViewportPuzzleRefresh();
     syncFocusSidePanelUi();
+    syncWorkbenchResizeHandle();
+    syncBoardPanForViewport();
     syncMobileActionsBar();
   });
   document.addEventListener("keydown", (event) => {
@@ -508,4 +524,5 @@ setPuzzleBackground(state.imageSrc);
 resetInitialView();
 refreshDesktopDifficultyControls();
 syncFocusSidePanelUi();
+syncBoardPanForViewport();
 syncMobileActionsBar();

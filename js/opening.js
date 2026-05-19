@@ -1,5 +1,6 @@
 import { OPEN_GIFT_TIMING } from "./config.js";
 import { els, state, syncMobileActionsBar } from "./state.js";
+import { syncBoardPanForViewport } from "./board-view.js";
 import { buildPuzzle } from "./board.js";
 import { startTimer } from "./timer.js";
 import { playGiftReveal, startBgmIfAllowed } from "./sounds.js";
@@ -63,6 +64,8 @@ export async function runOpenGiftSequence() {
     await buildPuzzle();
     startTimer();
     state.opening = false;
+    syncBoardPanForViewport();
+    syncMobileActionsBar();
     return;
   }
 
@@ -82,6 +85,7 @@ export async function runOpenGiftSequence() {
   await waitMs(OPEN_GIFT_TIMING.hideStartMs);
   els.startScreen.classList.add("hidden");
   els.startScreen.classList.remove("opening");
+  syncBoardPanForViewport();
   syncMobileActionsBar();
 
   await buildPromise;
@@ -91,5 +95,6 @@ export async function runOpenGiftSequence() {
   await waitRevealAnimationEnd();
   els.gameScreen.classList.remove("revealing");
   state.opening = false;
+  syncBoardPanForViewport();
   syncMobileActionsBar();
 }

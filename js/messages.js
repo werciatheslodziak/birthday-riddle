@@ -11,6 +11,7 @@ export const STATUS = {
       ? "Klocek wybrany — obrót: R, prawy przycisk albo LPM+PPM podczas przeciągania (+90°)."
       : "Klocek wybrany — stuknij go jeszcze raz krótko, żeby obrócić o 90°.",
   dropOutsideBoard: "Klocek poza planszą — wraca do tacki. Upuść na planszę, żeby go tam zostawić.",
+  returnedToTray: "Klocek wrócił do luźnych elementów.",
   stayedOnBoard: "Klocek zostaje na planszy w tym miejscu.",
   buildingPuzzle: "Układanie puzzli…",
   wrongRotation:

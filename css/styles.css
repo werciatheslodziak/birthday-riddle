@@ -3272,11 +3272,10 @@ body.wide-puzzle .board-wrap {
 
 .board-pan-layer {
   transform-origin: 50% 0;
-  will-change: transform;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+  touch-action: manipulation;
 }
 
 .puzzle-board {
@@ -3359,6 +3358,7 @@ body.wide-puzzle .board-wrap {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  padding-inline: 12px 8px;
 }
 
 .tray-sort-btn {
@@ -3551,5 +3551,23 @@ body.dense-desktop-tier .piece.dragging.near-home-rot {
 @media (max-width: 900px) {
   body.game-started.mobile-actions-visible {
     padding-bottom: 72px;
+  }
+
+  .board-pan-layer {
+    transform: none !important;
+  }
+
+  .pieces-tray,
+  .pieces-workbench {
+    transform: none !important;
+    resize: none !important;
+  }
+
+  .pieces-workbench {
+    resize: none;
+  }
+
+  .workbench-resize-handle {
+    display: none !important;
   }
 }

@@ -504,6 +504,7 @@ export function mountLockedPiece(piece) {
 
 export function returnToTray(piece) {
   if (piece.dataset.locked === "true") return;
+  piece.classList.remove("tray-filter-hidden");
   els.tray.appendChild(piece);
   piece.style.position = "absolute";
   piece.style.zIndex = String(5 + Math.floor(Math.random() * 200));
@@ -754,6 +755,19 @@ function pieceOverlapsBoard(piece, boardRect) {
   return pieceOverlapsRect(piece, boardRect);
 }
 
+function pieceCenterOverTray(piece) {
+  const trayRect = els.tray.getBoundingClientRect();
+  const pr = piece.getBoundingClientRect();
+  const cx = (pr.left + pr.right) / 2;
+  const cy = (pr.top + pr.bottom) / 2;
+  return (
+    cx >= trayRect.left &&
+    cx <= trayRect.right &&
+    cy >= trayRect.top &&
+    cy <= trayRect.bottom
+  );
+}
+
 function pieceOverlapsRect(piece, rect) {
   const pr = piece.getBoundingClientRect();
   const cx = (pr.left + pr.right) / 2;
@@ -843,7 +857,6 @@ function pieceCenterViewport(piece) {
   return { x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2 };
 }
 
-/** Podpowiedzi planszy tylko gdy klocek jest nad planszą, nie nad strefą roboczą. */
 function isPieceOverBoardForHints(piece, boardRect) {
   const c = pieceCenterViewport(piece);
   const margin = 6;
@@ -1030,6 +1043,13 @@ function tryPlacePieces(pieces, options = {}) {
       updateBoardGhostHints();
       checkWin();
     });
+    return;
+  }
+
+  if (pieces.some((piece) => pieceCenterOverTray(piece))) {
+    returnPiecesToTray(pieces);
+    void playParkSoft();
+    setStatus(STATUS.returnedToTray);
     return;
   }
 
