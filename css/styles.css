@@ -1293,6 +1293,9 @@ body.dense-desktop-tier .main-container {
   justify-items: center;
   gap: 12px;
   margin-bottom: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .puzzle-board {
@@ -2796,6 +2799,20 @@ body.wide-puzzle .hint {
 
 body.wide-puzzle .board-wrap {
   gap: 9px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-gutter: stable;
+}
+
+body.wide-puzzle .board-pan-layer,
+body.wide-puzzle .puzzle-board,
+body.wide-puzzle .pieces-tray,
+body.wide-puzzle .pieces-workbench {
+  max-width: 100%;
+  margin-inline: auto;
+  box-sizing: border-box;
 }
 
 body.wide-puzzle .puzzle-board {
@@ -3002,15 +3019,6 @@ body.focus-board .puzzle-board,
 body.focus-board .pieces-workbench,
 body.focus-board .pieces-tray {
   max-width: none;
-}
-
-body.wide-puzzle .puzzle-board,
-body.wide-puzzle .pieces-tray {
-  max-width: none;
-}
-
-body.wide-puzzle .board-wrap {
-  overflow-x: visible;
 }
 
 /* ═══════════════════════════════════════════════
@@ -3273,9 +3281,10 @@ body.wide-puzzle .board-wrap {
 .board-pan-layer {
   transform-origin: 50% 0;
   width: 100%;
-  max-width: 720px;
+  max-width: 100%;
   margin-inline: auto;
   touch-action: manipulation;
+  box-sizing: border-box;
 }
 
 .puzzle-board {
